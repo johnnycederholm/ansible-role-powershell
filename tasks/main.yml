@@ -5,6 +5,7 @@
     user: Powershell
     repo: Powershell
     action: latest_release
+    prerelease: true
   register: release
 
 - name: Download package
@@ -13,7 +14,7 @@
     dest: /tmp
     mode: "644"
 
-- name: Install Powershell
+- name: Install Powershell {{ release.tag[1:] }}
   ansible.builtin.apt:
     deb: /tmp/powershell_{{ release.tag[1:] }}-1.deb_amd64.deb
     state: present
