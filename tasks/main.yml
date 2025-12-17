@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Get latest release of a public repository
+  community.general.github_release:
+    user: Powershell
+    repo: Powershell
+    action: latest_release
+  register: release
+
+- name: Download package
+  ansible.builtin.get_url:
+    url: https://github.com/Powershell/Powershell/releases/download/{{ release.tag }}/powershell_{{ release.tag[1:] }}-1.deb_amd64.deb
+    dest: /tmp
+    mode: "644"
+
+- name: Install Powershell
+  ansible.builtin.apt:
+    deb: /tmp/powershell_{{ release.tag[1:] }}-1.deb_amd64.deb
+    state: present
