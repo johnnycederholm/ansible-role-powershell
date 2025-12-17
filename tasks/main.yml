@@ -7,14 +7,30 @@
     action: latest_release
     prerelease: true
   register: release
+  when: version is not defined
 
 - name: Download package
   ansible.builtin.get_url:
     url: https://github.com/Powershell/Powershell/releases/download/{{ release.tag }}/powershell_{{ release.tag[1:] }}-1.deb_amd64.deb
     dest: /tmp
     mode: "644"
+  when: version is not defined
+
+- name: Download package
+  ansible.builtin.get_url:
+    url: https://github.com/Powershell/Powershell/releases/download/v{{ version }}/powershell_{{ version }}-1.deb_amd64.deb
+    dest: /tmp
+    mode: "644"
+  when: version is defined
 
 - name: Install Powershell {{ release.tag[1:] }}
   ansible.builtin.apt:
     deb: /tmp/powershell_{{ release.tag[1:] }}-1.deb_amd64.deb
     state: present
+  when: version is not defined
+
+- name: Install Powershell {{ version }}
+  ansible.builtin.apt:
+    deb: /tmp/powershell_{{ version }}-1.deb_amd64.deb
+    state: present
+  when: version is defined
