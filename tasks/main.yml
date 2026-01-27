@@ -23,7 +23,7 @@
     mode: "644"
   when: powershell_version is defined
 
-- name: Install Powershell {{ release.tag[1:] }}
+- name: Install Powershell latest release
   ansible.builtin.apt:
     deb: /tmp/powershell_{{ release.tag[1:] }}-1.deb_amd64.deb
     state: present
